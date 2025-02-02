@@ -3,7 +3,7 @@
 using namespace Pololu3piPlus32U4;
 
 Motors motors;
-int obtain_time(int distance, int speed){
+int MyRobot::obtain_time(int distance, int speed){
   float actual_speed = speed / 1000.0;  // Convert speed input to m/s
   int time_ms = (distance / actual_speed) * 1000;  // Convert to milliseconds
   return time_ms;

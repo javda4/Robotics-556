@@ -24,6 +24,9 @@ void loop() {
   int speed = 300;
   int duration = 3000;
   int distance = 1;
+
+  //delay to give time to put robot down before it starts
+  delay(duration);
   
   //move forward
     robot.forward(distance, speed);
@@ -55,6 +58,52 @@ void loop() {
     led();
     led();
     delay(1000);
+
+  // //Initial Step Using INO file and set speeds before modularizing 
+  // Motors motors;
+  // int left_speed = 75;
+  // int right_speed = 75;
+  // int delay_time_ms = 4000;
+  // int default_speed = 75;
+  // int speed_offset = 75;
+  // int halt_speed = 0;
+  
+  // //delay initial action to have time to put robot down
+  // delay(delay_time_ms);
+
+  // //move forward
+  // motors.setSpeeds(left_speed, right_speed); 
+  // delay(delay_time_ms); //have move forward execute for delay_time_ms duration
+
+  // //move backwards
+  // motors.setSpeeds(left_speed * -1, right_speed * -1); 
+  // delay(delay_time_ms);
+  // left_speed = default_speed;
+  // right_speed = default_speed; // reset left and right speed to its default value for next operation
+
+  // //spin left 
+  // motors.setSpeeds(left_speed * -1, right_speed);
+  // delay(delay_time_ms);
+  // left_speed = default_speed; // reset left speed to its default value for next operation
+
+  // //spin right
+  // motors.setSpeeds(left_speed, right_speed * -1);
+  // delay(delay_time_ms);
+  // right_speed = default_speed; // reset right speed to its default value for the next operation
+
+  // //move forward veer left 
+  // motors.setSpeeds(left_speed, right_speed + speed_offset); 
+  // delay(delay_time_ms);
+  // right_speed = default_speed; //reset right speed to its default value for next operation
+
+  // // move forward veer right 
+  // motors.setSpeeds(left_speed + speed_offset, right_speed); 
+  // delay(delay_time_ms);
+  // left_speed = default_speed; // resert left speed to its default value for next operation
+
+  // // halt
+  // motors.setSpeeds(halt_speed, halt_speed);
+  // delay(delay_time_ms);
 }
 
 
