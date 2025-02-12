@@ -1,0 +1,37 @@
+Test Sonar display values to screen
+
+Test Servo get a video
+
+Minimum sensing range //////Bot Read out:3.07cm Real: 0.00cm
+Max range  ///////// Real: 120cm Bot read out: 115.07cm
+
+10 distances to test
+10: 11.913  20: 21.972  30:31.332  40: 40.91 50: 51.107 
+60: 61.254 70: 70.978 80: 81.534  90: 91.789  100: 98.986
+
+differences: 1.913, 1.972, 1.332, 0.91, 1.107, 1.254, 0.978, 1.534, 1.789, 1.014
+
+Mean of errors:
+Standard deviation of errors:
+Histogram of errors: 
+
+Cone size/angular range   22 real     23.767 Robot read out 
+60 degrees 
+critical angle 60
+
+Method:
+
+
+Measurement Material B
+10: 11.522
+20: 21.832
+30: 31.142
+60: 59.912
+70: 60
+80: 59.60
+90: 29.672
+100: 34.622
+
+Observation and Reasoning:
+
+When class was making noise we were getting misreads
