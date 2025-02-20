@@ -6,7 +6,7 @@ using namespace Pololu3piPlus32U4;
 class MyRobot {
   public:
     MyRobot();
-    int obtain_time(int distance, int speed);
+    float obtain_time(int distance, int speed);
     long move_time(long start, int time_ms);
     void forward(int distance, int speed);
     void backward(int distance, int speed);

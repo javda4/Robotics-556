@@ -32,11 +32,14 @@ float x = 0.0, y = 0.0, theta = 0.0;
 
 void setup() {
   Serial.begin(9600);
-  delay(20);
+  delay(10);
 }
 
 void loop() {  
-
+   while (Serial.available() == 0) {
+    Serial.println("Waiting...");
+    delay(1000);
+  }
       //(TASK 2.1) Test Encoders while Staying Still 
 
       //IMPORT FUNCTIONS FROM LAB1 (MOVE FORWARD, TURN LEFT, ...) 
@@ -44,32 +47,32 @@ void loop() {
 
       //Encoder code should always be before updating and movement
       // Read data from encoders
-      deltaL = encoders.getCountsAndResetLeft();
-      deltaR = encoders.getCountsAndResetRight();
-      encCountsLeft += deltaL;
-      encCountsRight += deltaR;
+                deltaL = encoders.getCountsAndResetLeft();
+                deltaR = encoders.getCountsAndResetRight();
+                encCountsLeft += deltaL;
+                encCountsRight += deltaR;
 
-      Serial.println("before left:  "); 
-      Serial.println(encCountsLeft); 
-      Serial.println("before right:  ");
-      Serial.println(encCountsRight);
-      oled.print_encoder(encCountsLeft, encCountsRight);
+                Serial.println("before left:  "); 
+                Serial.println(encCountsLeft); 
+                Serial.println("before right:  ");
+                Serial.println(encCountsRight);
+                
 
-      robot.forward(200, BaseSpeed);  // Move forward 1 meter //////////////////////////
-      deltaL = encoders.getCountsAndResetLeft();
-      deltaR = encoders.getCountsAndResetRight();
+                // robot.forward(1, BaseSpeed);  // Move forward 1 meter //////////////////////////
+                deltaL = encoders.getCountsAndResetLeft();
+                deltaR = encoders.getCountsAndResetRight();
 
       // Increment total encoder count
-      encCountsLeft += deltaL;
-      encCountsRight += deltaR;
+                encCountsLeft += deltaL;
+                encCountsRight += deltaR;
 
-      Serial.print(" left:  "); 
-      Serial.println(encCountsLeft); 
-      Serial.println(" right:  ");
-      Serial.println(encCountsRight);
-      oled.print_encoder(encCountsLeft, encCountsRight);
+                Serial.print(" left:  "); 
+                Serial.println(encCountsLeft); 
+                Serial.println(" right:  ");
+                Serial.println(encCountsRight);
+                oled.print_encoder(encCountsLeft, encCountsRight);
       
-      while (true);  // Stops further execution
+                //while (true);  // Stops further execution
 
       //(TASK 2.2) TEST ENCODERS WHILE MOVING EACH OF THE THREE MOVEMENTS LISTED BELOW (ONE AT A TIME) 
       //(NOTE: YOU SHOULD UPDATE AND USE PRIMITIVE FUNCTIONS FROM LAB1)
@@ -78,13 +81,45 @@ void loop() {
       
       //(2.2a) MOVE FORWARD ON A STRAIGHT LINE FOR ONE METER
 
+
+      //  robot.forward(1, BaseSpeed); // Move backward 1 meter //////////////////////////
+      //  deltaL = encoders.getCountsAndResetLeft();
+      //  deltaR = encoders.getCountsAndResetRight();
+      //  encCountsLeft += deltaL;
+      //  encCountsRight += deltaR;
+      //  oled.print_encoder(encCountsLeft,encCountsRight);
+      //  while(true);
+
+
+
       //(2.2b) MOVE BACKWARD ON A STRAIGHT LINE FOR ONE METER
-      // robot.backward(1000, BaseSpeed); // Move backward 1 meter //////////////////////////
+      //  robot.backward(1, BaseSpeed); // Move backward 1 meter //////////////////////////
+      //  deltaL = encoders.getCountsAndResetLeft();
+      //  deltaR = encoders.getCountsAndResetRight();
+      //  encCountsLeft += deltaL;
+      //  encCountsRight += deltaR;
+      //  oled.print_encoder(encCountsLeft,encCountsRight);
+      //     while(true);
+
+
+
       
       //(2.2c) TURN LEFT FOR 90 DEGREES
-      // robot.spin_left(1000, BaseSpeed); // Turn left 90 degrees ////////////////////////
+      // int gos = 0;
+      //     while(gos < 4){
+      //  robot.forward(1,BaseSpeed);
+      //  deltaL = encoders.getCountsAndResetLeft();
+      //  deltaR = encoders.getCountsAndResetRight();
+      //  encCountsLeft += deltaL;
+      //  encCountsRight += deltaR;
 
+      //  odometry.update_odom(encCountsLeft,encCountsRight, x, y, theta);
+      //  oled.print_odom(x,y,theta);
+      //  robot.spin_right(700, BaseSpeed); // Turn left 90 degrees
+      //  gos = gos + 1;
+      //     }
 
+      // while(true);
 
 
       //(TASK 3.1) IMPLEMENT ODOMETRY 

@@ -3,13 +3,14 @@
 using namespace Pololu3piPlus32U4;
 
 Motors motors;
-int MyRobot::obtain_time(int distance, int speed){
-  float actual_speed = speed / 1000.0;  // Convert speed input to m/s
-  int time_ms = (distance / actual_speed) * 1000;  // Convert to milliseconds
-  delay(10000);
-  Serial.println(time_ms);
-  while(true);
-  return time_ms;
+float MyRobot::obtain_time(int distance, int speed){
+    float actual_speed = (float)speed / 1000.0;
+    Serial.print("Speed (converted to m/s): ");
+    Serial.println(actual_speed, 6);  // Print with precision
+    float time_ms = (distance / actual_speed) * 1000;
+    Serial.print("Computed time_ms: ");
+    Serial.println(time_ms);
+    return time_ms;
 }
 
 long MyRobot::move_time(long start, int time_ms){
@@ -18,13 +19,21 @@ long MyRobot::move_time(long start, int time_ms){
   while (time_ms_long > delta_time){
       long current = millis();
       delta_time = current - start;
-      Serial.println("Start: ");
-      Serial.println(start);
-      Serial.println("Current: ");
-      Serial.println(current);
-      Serial.println("Delta_time: ");
-      Serial.println(delta_time);
+      // Serial.println("start: ");
+      // Serial.println(start);
+      // Serial.println("current: ");
+      // Serial.println(current);
+      // Serial.println("delta_time: ");
+      // Serial.println(delta_time);
     }
+    // Serial.println("start: ");
+    // Serial.println(start);
+    // Serial.println("time_ms_long: ");
+    // Serial.println(time_ms_long);
+    // Serial.println("current: ");
+    // Serial.println(current);
+    // Serial.println("delta_time: ");
+    // Serial.println(delta_time);
     Serial.println("This is the end of the move time function");
 }
 
@@ -32,7 +41,7 @@ long MyRobot::move_time(long start, int time_ms){
 MyRobot::MyRobot() {}
 //defin moving forward
   void MyRobot::forward(int distance, int speed) {
-    int time_ms = obtain_time(distance, speed);
+    float time_ms = obtain_time(distance, speed);
     long start = millis();
 //set motor speeds to move forward
     motors.setSpeeds(speed, speed);
@@ -47,7 +56,7 @@ MyRobot::MyRobot() {}
 
 //define backing up
 void MyRobot::backward(int distance, int speed) {
-    int time_ms = obtain_time(distance, speed);
+    float time_ms = obtain_time(distance, speed);
   //set motor speeds to back up
     motors.setSpeeds(-speed, -speed);
     delay(time_ms);

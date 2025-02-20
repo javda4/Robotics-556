@@ -68,7 +68,7 @@ void Odometry::update_odom(int left_encoder_counts, int right_encoder_counts, fl
 
 
   // PRINT THE x, y, theta VALUES ON OLED
-  printOLED.print_odom(x, y, theta);
+    printOLED.print_odom(x, y, theta);
 
   // PRINT THE x, y, theta VALUES ON SERIAL MONITOR
       // Odometry.update_odom(encCountsLeft, encCountsRight, x, y, theta); // x, y, theta call by reference
