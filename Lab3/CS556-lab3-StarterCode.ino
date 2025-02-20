@@ -37,7 +37,7 @@ void setup() {
 
 void loop() {  
    while (Serial.available() == 0) {
-    Serial.println("Waiting...");
+    Serial.println("Waiting..."); //wait for us to be ready to start program with any user input
     delay(1000);
   }
       //(TASK 2.1) Test Encoders while Staying Still 
@@ -105,19 +105,14 @@ void loop() {
 
       
       //(2.2c) TURN LEFT FOR 90 DEGREES
-      // int gos = 0;
-      //     while(gos < 4){
+
       //  robot.forward(1,BaseSpeed);
       //  deltaL = encoders.getCountsAndResetLeft();
       //  deltaR = encoders.getCountsAndResetRight();
       //  encCountsLeft += deltaL;
       //  encCountsRight += deltaR;
-
-      //  odometry.update_odom(encCountsLeft,encCountsRight, x, y, theta);
-      //  oled.print_odom(x,y,theta);
-      //  robot.spin_right(700, BaseSpeed); // Turn left 90 degrees
-      //  gos = gos + 1;
-      //     }
+      //  robot.spin_right(720, BaseSpeed); // Turn left 90 degrees
+      //  oled.print_encoder(encCountsLeft,encCountsRight);
 
       // while(true);
 
@@ -138,7 +133,53 @@ void loop() {
 
       //(3.2a)  15-meter straight line down the hallway
 
+      //  robot.forward(15, BaseSpeed); // Move backward 1 meter //////////////////////////
+      //  deltaL = encoders.getCountsAndResetLeft();
+      //  deltaR = encoders.getCountsAndResetRight();
+     //  deltaL = encoders.getCountsAndResetLeft();
+      //  deltaR = encoders.getCountsAndResetRight();
+      //  encCountsLeft += deltaL;
+      //  encCountsRight += deltaR;
+      //  odometry.update_odom(encCountsLeft,encCountsRight, x, y, theta);
+      //  oled.print_odom(x,y,theta);
+      //  while(true);  // stop program after execution
+
+
+
+
       //(3.2c)  1-meter square clockwise
-      
+
+      // int gos = 0;
+      //     while(gos < 4){    //create square with loop
+      //  robot.forward(1,BaseSpeed);
+      //  deltaL = encoders.getCountsAndResetLeft();
+      //  deltaR = encoders.getCountsAndResetRight();
+      //  encCountsLeft += deltaL;
+      //  encCountsRight += deltaR;
+
+      //  odometry.update_odom(encCountsLeft,encCountsRight, x, y, theta);
+      //  oled.print_odom(x,y,theta);
+      //  robot.spin_right(700, BaseSpeed); // Turn left 90 degrees
+      //  gos = gos + 1;
+      //     }
+
+
+
+
+
       //(3.3e)  1-meter square counterclockwise
+
+      // int gos = 0;
+      //     while(gos < 4){  //create square with loop
+      //  robot.forward(1,BaseSpeed);
+      //  deltaL = encoders.getCountsAndResetLeft();
+      //  deltaR = encoders.getCountsAndResetRight();
+      //  encCountsLeft += deltaL;
+      //  encCountsRight += deltaR;
+
+      //  odometry.update_odom(encCountsLeft,encCountsRight, x, y, theta);
+      //  oled.print_odom(x,y,theta);
+      //  robot.spin_left(700, BaseSpeed); // Turn left 90 degrees
+      //  gos = gos + 1;
+      //     }
 }
