@@ -43,7 +43,7 @@ Odometry::Odometry(float diaL, float diaR, float w, int nL, int nR, int gearRati
 
 // USE ODOMETRY FORMULAS TO CALCULATE ROBOT'S NEW POSITION AND ORIENTATION
 void Odometry::update_odom(int left_encoder_counts, int right_encoder_counts, float &x, float &y, float &theta){
-	  float left_distance = ((_diaL * PI) * (left_encoder_counts - _left_encoder_counts_prev)) / (_nL * _gearRatio);
+	  float left_distance = ((_diaL * PI) * (left_encoder_counts - _left_encoder_counts_prev)) / (_nL * _gearRatio);      //Double or Float? Does it matter
     float right_distance = ((_diaR * PI) * (right_encoder_counts - _right_encoder_counts_prev)) / (_nR * _gearRatio);
 
     float delta_d = (right_distance + left_distance) / 2.0;
@@ -55,16 +55,25 @@ void Odometry::update_odom(int left_encoder_counts, int right_encoder_counts, fl
         _imu.readGyro();
         delta_theta = ((_imu.g.z - _IMUavg_error) * 0.001); // Assume time step of 1ms
     } else {
-        delta_theta = (right_distance - left_distance) / _w;
+        delta_theta = (right_distance - left_distance) / _w;  //Setting our variable to work with
+        _theta += delta_theta;                              //Setting the odometry's instance _theta value
     }
 
 
   // CALCULATE _x BASED ON THE FORMULA FROM THE LECTURES
   // CALCULATE _y BASED ON THE FORMULA FROM THE LECTURES
   //REMINDER: CUMULATIVE theta IS EQUAL TO _theta.
-    theta += delta_theta;
-    x += delta_d * cos(theta);
-    y += delta_d * sin(theta);
+   
+    _x += delta_d * cos(theta);
+    _y += delta_d * sin(theta);
+
+    
+    //_theta += delta_theta;   Instead of this lets try
+    theta =  (_theta) * -1;     
+
+    //now with updated instance _x and _y values we can accumulate them 
+    x += _x;
+    y += _y;
 
 
   // PRINT THE x, y, theta VALUES ON OLED

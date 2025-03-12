@@ -20,12 +20,15 @@ double PDcontroller::update(double value, double target_value) {
     double deltaTime = (currentTime - _prevTime) / 1000.0;  // Convert to seconds
 
     // Avoid division by zero (on the first call)
-    if (deltaTime == 0) {
+    if (deltaTime == 0 ) {
         deltaTime = 1e-6;  // A very small number to prevent division by zero
     }
 
+    
+
     // Calculate the error
     _error = target_value - value;
+
 
     // Calculate derivative term (rate of change of error)
     double derivative = (_error - _prevError) / deltaTime;
