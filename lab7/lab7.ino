@@ -19,19 +19,19 @@ PrintOLED oled;
 //Update kp, kd, and ki based on your testing (First PIDcontroller for angle)
 #define minOutputAng -100
 #define maxOutputAng 100
-#define kpAng 10//Tune Kp here
+#define kpAng 200//Tune Kp here
 #define kdAng 0.05 //Tune Kd here
-#define kiAng 5.5 //Tune Ki here
-#define clamp_iAng 10 //Tune ki integral clamp here
+#define kiAng 5 //Tune Ki here
+#define clamp_iAng 50 //Tune ki integral clamp here
 #define base_speedAng 50
 
 //Update kp, kd, and ki based on your testing (Second PIDcontroller for velocity) (Task 2.3)
 #define minOutputVel -100
 #define maxOutputVel 100
-#define kpVel 10 //Tune Kp here
-#define kdVel 0.05 //Tune Kd here
-#define kiVel 5.5 //Tune Ki here
-#define clamp_iVel 10 //Tune ki integral clamp here
+#define kpVel 100 //Tune Kp here
+#define kdVel 20 //Tune Kd here
+#define kiVel 0.75 //Tune Ki here
+#define clamp_iVel 75 //Tune ki integral clamp here
 #define base_speedVel 50
 
 Odometry odometry(diaL, diaR, w, nL, nR, gearRatio, DEAD_RECKONING); //Uncomment if using odometry class
@@ -40,8 +40,8 @@ PIDcontroller pidVel(kpVel, kiVel, kdVel, minOutputVel, maxOutputVel, clamp_iVel
 
 //Feel free to use this in your PD/PID controller for target values
 // Given goals in cm and radians
-const float goal_x = 1;
-const float goal_y = 1;
+const float goal_x = 100;
+const float goal_y = 100;
 const float goal_theta = 1.57; // Must put in radians
 
 //odometry
@@ -97,32 +97,39 @@ void loop() {
     dist_to_goal = sqrt(pow(goal_x - x, 2) + pow(goal_y - y, 2));
 
     // TASK 2.1: Basic PID to rotate towards goal
-    PIDout_theta = pidAng.update(angle_to_goal, actual_angle);
-    motors.setSpeeds(PIDout_theta, -PIDout_theta);
-    Serial.print("X: "); Serial.println(x);
-    Serial.print(" Y: "); Serial.println(y);
-    Serial.print(" Theta: "); Serial.println(theta);
-    Serial.print(" Distance: "); Serial.println(dist_to_goal);
-    Serial.print(" PID Theta: "); Serial.println(PIDout_theta);
+    PIDout_theta = pidAng.update(actual_angle, angle_to_goal);
+    // //motors.setSpeeds(base_speedAng - PIDout_theta, base_speedAng + PIDout_theta);
+    // Serial.print("X: "); Serial.println(x);
+    // Serial.print(" Y: "); Serial.println(y);
+    // Serial.print(" Theta: "); Serial.println(theta);
+    // Serial.print(" Distance: "); Serial.println(dist_to_goal);
+    // Serial.print(" PID Theta: "); Serial.println(PIDout_theta);
   /*TASK 2.2
   Improve the baseline solution by telling the robot to stop when it gets close 
   enough to the goal.
   Write your code below and comment out when moving to the next task.*/
-  if (dist_to_goal < 0.01) { // cm threshold
-        motors.setSpeeds(0, 0);
-        return;
-    }
+  // if (dist_to_goal < 0.1) { // cm threshold
+  //       motors.setSpeeds(0, 0);
+  //       return;
+  //   }
   /*TASK 2.3
   Improve the solution further by using a second PID controller to control the velocity
   as it goes towards the goal.
   Write your code below.*/
     PIDout_distance = pidVel.update(dist_to_goal, 0.0);
-    motors.setSpeeds(PIDout_distance + PIDout_theta, PIDout_distance - PIDout_theta);
+    motors.setSpeeds(-PIDout_distance + PIDout_theta * (-1), -PIDout_distance - PIDout_theta * (-1));
     Serial.print("X: "); Serial.println(x);
     Serial.print(" Y: "); Serial.println(y);
     Serial.print(" Theta: "); Serial.println(theta);
     Serial.print(" Distance: "); Serial.println(dist_to_goal);
     Serial.print(" PID Theta: "); Serial.println(PIDout_theta);
     oled.print_odom(x, y, theta);
+
+
+    if (dist_to_goal < 0.1) { // cm threshold
+        motors.setSpeeds(0, 0);
+        while (true);
+        
+    }
 
 }
