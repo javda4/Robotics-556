@@ -24,7 +24,7 @@ unsigned int lineSensorValues[5];
 int lineCenter;
 int16_t robotPosition;
 
-
+//function to calibrate line sensors
 void calibrateSensors()
 {
   //TASK 2.1a
@@ -34,7 +34,8 @@ void calibrateSensors()
    
     Serial.println(F("Calibrating..."));
     delay(1000);
-    
+
+    // spin the robot in both directions to calibrate the sensors range
     for (int i = 0; i < 50; i++) {
         motors.setSpeeds(-calibrationSpeed, calibrationSpeed); 
         lineSensors.calibrate();
@@ -49,18 +50,21 @@ void calibrateSensors()
     
     Serial.println(F("Calibration Done"));
     delay(1000);
+
 }
 
+//function to follow the line by giving a center value based on line sensor documentation
+//apply PD controller in the function to stay on the line
 void followLine() {
     robotPosition = lineSensors.readLineBlack(lineSensorValues);
     Serial.println("Robot Position sensor values:");
     Serial.println(robotPosition);
+    
     lineCenter = 2000; 
     double correction = pd_line.update(robotPosition, lineCenter);
     
     int leftSpeed = baseSpeed - correction;
     int rightSpeed = baseSpeed + correction;
-    
     
     motors.setSpeeds(leftSpeed, rightSpeed);
 }
@@ -68,14 +72,9 @@ void followLine() {
 void setup() {
   Serial.begin(9600);
   delay(2000);
-
+  // call to calibrate sensor function
   calibrateSensors();
-  // Serial.println(F("Press any key to start..."));
-  //   while (!Serial.available()) {
-  //       // Wait for user input
-  //   }
-  //   Serial.read(); // Clear the input buffer
-    delay(10);
+  delay(10);
   
 }
 
@@ -86,6 +85,8 @@ void loop(){
   //Hint: The actual structure should be similar to you wall following code, 
   //      but instead of sonar you are using the Line Sensors class.
   //Consider making this its own function for easier use in the next lab
+
+  //call to follow line sensor
   followLine();
     
 }
