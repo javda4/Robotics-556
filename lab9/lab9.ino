@@ -17,10 +17,10 @@ Sonar sonar(4);
 #define minOutput -100
 #define maxOutput 100
 #define baseSpeed 100
-#define kp_line 0.25
-#define kd_line 1
-#define kp_obs 50
-#define kd_obs 5
+#define kp_line 0.25 //0.25
+#define kd_line 1 // 1
+#define kp_obs 25 //25
+#define kd_obs 5 //5
 
 PDcontroller pd_line(kp_line, kd_line, minOutput, maxOutput);
 PDcontroller pd_obs(kp_obs, kd_obs, minOutput, maxOutput);
@@ -91,9 +91,14 @@ void loop(){
 
 void lineFollowing()
 {
-  motors.setSpeeds(0, 0);
+
+  ////////////////////////////////////////prep linefollow state/////////////////////////
+  motors.setSpeeds(0,0);
   delay(100);
   servo.write(90);
+  /////////////////////////////////////////////////////////////////////////////////////
+
+///////////////////////////////////////////line following state///////////////////////
   while (true){
   robotPosition = lineSensors.readLineBlack(lineSensorValues);
     Serial.println("Robot Position sensor values:");
@@ -111,6 +116,7 @@ void lineFollowing()
     if (wallDist<10.0){
     wallFollowing();
     }
+    ////////////////////////////////////////////////////////////////////////////////////
   }
 }
 
@@ -137,19 +143,21 @@ void lineFollowing()
 //     }
 // }
 
-
+///////////////////////////////////////wall following prep state////////////////////////////////
 void initialWallFollowing(){
   int i;
   for(i=0; i<1000; i++){
+    oled.print_int(i);
     wallDist = sonar.readDist();
     double pdout = pd_obs.update(wallDist, distFromWall);
     int leftSpeed = baseSpeed + pdout;
     int rightSpeed = baseSpeed - pdout;
     
     motors.setSpeeds(leftSpeed, rightSpeed);
-    oled.print_float(wallDist);
+    //oled.print_float(wallDist);
   }
 }
+
 void wallFollowing(){
     motors.setSpeeds(0,0);
     delay(1000);
@@ -160,6 +168,10 @@ void wallFollowing(){
     motors.setSpeeds(0,0);
     delay(500);
     initialWallFollowing();
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+  ///////////////////////////////////////Wall following state/////////////////////////////////////
     while (true){
     wallDist = sonar.readDist();
     double pdout = pd_obs.update(wallDist, distFromWall);
@@ -167,14 +179,14 @@ void wallFollowing(){
     int rightSpeed = baseSpeed - pdout;
     
     motors.setSpeeds(leftSpeed, rightSpeed);
-    oled.print_float(wallDist); ///////////////////////////////////////
+    //oled.print_float(wallDist); 
     detectBlackLine();
     }
 }
+  ///////////////////////////////////////////////////////////////////////////////////////////////
 
 
-void detectBlackLine()
-{
+void detectBlackLine(){
   lineSensors.read(lineDetectionValues);
 
     // Threshold value to detect black (adjust based on calibration)
@@ -183,17 +195,17 @@ void detectBlackLine()
     // Check if the robot is on a black square
     for (int i = 0; i < 5; i++) {
         Serial.println(lineDetectionValues[i]);
-        //float theline = (float)lineDetectionValues[i]; /////////////////////////////
-        //oled.print_float(theline);   ///////////////////////////////////
         if (lineDetectionValues[i] > blackThreshold) {
+          /////////////////////////////////////////////Detect Line State////////////////////////
             servo.write(90);
             //#TODO If using this function, decide what to do 
             //      if black line is detected again
-            motors.setSpeeds(50, -50);
-            delay(300);
+            motors.setSpeeds(150, 20); // 50, -50
+            delay(1000);
             motors.setSpeeds(0,0);
             delay(100);
             lineFollowing();
+          /////////////////////////////////////////////////////////////////////////////////////
         }
     }
 }

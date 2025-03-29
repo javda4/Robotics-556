@@ -44,7 +44,7 @@ void PrintOLED::print_encoder(float L, float R){
 }
 
 void PrintOLED::print_float(float x){
-      char buf[8];
+      char buf[6]; ////////////////////////////////////// changing from 8 to 6
             
       // Update the OLED screen every 250 ms.
       if ((uint16_t)(millis() - _lastUpdateTime) > 250)
@@ -57,6 +57,18 @@ void PrintOLED::print_float(float x){
       display.print(buf);
 }
 
+
+void PrintOLED::print_int(int x){
+  char buf[4];
+  if ((uint16_t)(millis() - _lastUpdateTime) > 250)
+      {
+        _lastUpdateTime = millis();
+        dtostrf(x,4,2,buf);
+      }
+
+      display.gotoXY(0, 0);
+      display.print(buf);
+}
 
 void PrintOLED::print_odom(float x, float y, float theta){
       char bufx[6]="";

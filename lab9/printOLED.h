@@ -10,6 +10,7 @@ class PrintOLED{
     void print_float(float x);
     void print_odom(float x, float y, float phi);
     void print_kp_dist(float kp, double dist);
+    void print_int(int x);
   private:
     int _lastUpdateTime;
 };
