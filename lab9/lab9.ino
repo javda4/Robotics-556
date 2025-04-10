@@ -45,7 +45,7 @@ int distFromWall = 10;
 
 void calibrateSensors()
 {
-
+  //calibrate sensors function
   Serial.println(F("Calibrating..."));
     delay(1000);
     
@@ -77,12 +77,15 @@ void setup() {
 }
 
 void loop(){
-
+//start by calculating dist to wall
   wallDist = sonar.readDist();
   oled.print_float(wallDist);
+
+  //if wall is within range start following wall
   if (wallDist<10.0){
     wallFollowing();
   }
+  //else follow line
   lineFollowing();
  
     
