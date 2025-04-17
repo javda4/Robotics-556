@@ -101,26 +101,52 @@ void loop() {
  
 }
 
-void movement(){
-   if (buttonA.isPressed()) {
-    motors.setSpeeds(-200, 200); // left turn
-    delay(415);
-    motors.setSpeeds(0, 0);
-    Serial.print("Left pressed!\n");
-  } 
+// void movement(){
+//    if (buttonA.isPressed()) {
+//     motors.setSpeeds(-200, 200); // left turn
+//     delay(415);
+//     motors.setSpeeds(0, 0);
+//     Serial.print("Left pressed!\n");
+//   } 
   
-  else if (buttonB.isPressed()) {
-    motors.setSpeeds(200, 200); // forward
-    delay(1000);
-    motors.setSpeeds(0, 0);
-    Serial.print("Forward pressed!\n");
-  } 
+//   else if (buttonB.isPressed()) {
+//     motors.setSpeeds(200, 200); // forward
+//     delay(1000);
+//     motors.setSpeeds(0, 0);
+//     Serial.print("Forward pressed!\n");
+//   } 
   
-  else if (buttonC.isPressed()) {
-    motors.setSpeeds(200, -200); // right turn
-    delay(415);
-    motors.setSpeeds(0, 0);
-    Serial.print("Right pressed!\n");
-  }
+//   else if (buttonC.isPressed()) {
+//     motors.setSpeeds(200, -200); // right turn
+//     delay(415);
+//     motors.setSpeeds(0, 0);
+//     Serial.print("Right pressed!\n");
+//   }
  
+// }
+
+//movement using keyboard inputs to save my back
+void movement() {
+  if (Serial.available() > 0) {
+    char command = Serial.read();
+
+    if (command == 'a') {
+      motors.setSpeeds(-200, 200); // left turn
+      delay(415);
+      motors.setSpeeds(0, 0);
+      Serial.println("Left pressed!");
+    } 
+    else if (command == 'w') {
+      motors.setSpeeds(200, 200); // forward
+      delay(1000);
+      motors.setSpeeds(0, 0);
+      Serial.println("Forward pressed!");
+    } 
+    else if (command == 'd') {
+      motors.setSpeeds(200, -200); // right turn
+      delay(415);
+      motors.setSpeeds(0, 0);
+      Serial.println("Right pressed!");
+    }
+  }
 }
