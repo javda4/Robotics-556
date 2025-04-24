@@ -80,3 +80,17 @@ void MyRobot::calibrateSensors()
     delay(1000);
 }
 
+void MyRobot::followLine() {
+    robotPosition = lineSensors.readLineBlack(lineSensorValues);
+    Serial.println("Robot Position sensor values:");
+    Serial.println(robotPosition);
+    
+    lineCenter = 2000; 
+    double correction = pd_line.update(robotPosition, lineCenter);
+    
+    int leftSpeed = baseSpeed - correction;
+    int rightSpeed = baseSpeed + correction;
+    
+    motors.setSpeeds(leftSpeed, rightSpeed);
+}
+
