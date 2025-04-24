@@ -57,3 +57,26 @@ void MyRobot::halt() {
     delay(100);
 }
 
+void MyRobot::calibrateSensors()
+{
+  //calibrate sensors function
+  Serial.println(F("Calibrating..."));
+    delay(1000);
+    
+    for (int i = 0; i < 50; i++) {
+        motors.setSpeeds(-calibrationSpeed, calibrationSpeed); 
+        lineSensors.calibrate();
+        delay(10);
+        
+    }
+    for (int i = 0; i < 50; i++) { // potential 200 to account for previous off set?
+        motors.setSpeeds(calibrationSpeed, -calibrationSpeed);
+        lineSensors.calibrate();
+        delay(10);
+    }
+    motors.setSpeeds(0, 0);
+    
+    Serial.println(F("Calibration Done"));
+    delay(1000);
+}
+
