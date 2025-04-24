@@ -14,6 +14,7 @@ class MyRobot {
     void turn_left(int duration, int speed);
     void turn_right(int duration, int speed);
     void halt();
+    void calibrateSensors();
 
   private:
     Pololu3piPlus32U4::Motors motors;
