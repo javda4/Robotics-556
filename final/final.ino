@@ -57,7 +57,7 @@ int16_t encCountsLeft = 0, encCountsRight = 0;
 float x = 10; 
 float y = 10; 
 float theta; // Robot's position (x, y) and orientation (theta)
-const float delta_checker = 20.0;
+const float delta_checker = 10.0;
 float last_x = 0;
 float last_y = 0;
 
@@ -68,7 +68,7 @@ double PIDout_theta;  // Output of the PID controller for angular movement
 unsigned int blueValues[5];  // Store blue square values
 unsigned int lineSensorValues[5]; //constant looped sensor values
 const int blackThreshold = 2000;
-const int blueThreshold = 1;
+const int blueThreshold = 800;
 
 
 //wall follow
@@ -109,13 +109,13 @@ struct Distances {
 // Function to check distances using sonar sensor
 Distances checkSurroundings() {
   Distances d;
-  servo.write(90); delay(50); d.front = sonar.readDist(); delay(50);
+  servo.write(90); delay(100); d.front = sonar.readDist(); delay(100);
   Serial.print("Front: ");
   Serial.println(d.front);
-  servo.write(180); delay(50); d.left = sonar.readDist(); delay(50);
+  servo.write(180); delay(100); d.left = sonar.readDist(); delay(100);
   Serial.print("Left: ");
   Serial.println(d.left);
-  servo.write(0); delay(50); d.right = sonar.readDist(); delay(50);
+  servo.write(0); delay(100); d.right = sonar.readDist(); delay(100);
   Serial.print("Right: ");
   Serial.println(d.right);
   servo.write(90); delay(50);
@@ -125,6 +125,8 @@ Distances checkSurroundings() {
 
 
 void wallFollowingSearch(){
+  Serial.print("First wall: ");
+  Serial.println(firstWallFollowed);
   float _delta_x = abs(x - last_x);
   float _delta_y = abs(y - last_y);
   if (_delta_x > delta_checker || _delta_y > delta_checker){
@@ -137,10 +139,15 @@ void wallFollowingSearch(){
     }
   }
   if(firstWallFollowed){
+    Serial.println("Bye");
+    Serial.println("Bye");
+    Serial.println("Bye");
+    Serial.println("Bye");
+    Serial.println("Bye");
     if (wall_ahead){
       wall_ahead = false;
-      motors.setSpeeds(50,0);
-      delay(250);
+      motors.setSpeeds(150,0);
+      delay(1000);
       motors.setSpeeds(0,0);
     }
     servo.write(180);
@@ -151,11 +158,17 @@ void wallFollowingSearch(){
     int rightSpeed = base_speed + PIDout;
     motors.setSpeeds(leftSpeed, rightSpeed);
   }
+
   else{
+    Serial.println("HI");
+    Serial.println("HI");
+    Serial.println("HI");
+    Serial.println("HI");
+    Serial.println("HI");
     if (wall_ahead){
       wall_ahead = false;
-      motors.setSpeeds(0,50);
-      delay(250);
+      motors.setSpeeds(0,150);
+      delay(1000);
       motors.setSpeeds(0,0);
     }
     servo.write(0);
@@ -207,11 +220,11 @@ void wallFollowingSearch(){
       Serial.println(F("Trash Found"));
     }
 
-    else if (lineSensorValues[i] > blueThreshold && firstWallFollowed) {
+    else if (lineSensorValues[i] > blueThreshold && firstWallFollowed && !gridHasTrash[trashRow][trashCol]) {
       secondWallFollowed = true;
     }
 
-    else if (lineSensorValues[i] > blueThreshold) {
+    else if (lineSensorValues[i] > blueThreshold && !gridHasTrash[trashRow][trashCol]) {
       firstWallFollowed = true;
     }
   }
@@ -237,17 +250,41 @@ void switchWalls(){
 
 
 void backToBase(){
-  servo.write(180);
-  wallDist = sonar.readDist();
-  PIDout = pidVel.update(wallDist,desiredDistFromWall);
-  int leftSpeed = base_speed + PIDout;
-  int rightSpeed = base_speed - PIDout;
-  motors.setSpeeds(leftSpeed, rightSpeed);
-  for (int i = 0; i < 5; i++){
-  if (lineSensorValues[i] > blueThreshold){
-    motors.setSpeeds(0, 0);
-    while(true){}
-  }
+  while(true){
+    deltaL = encoders.getCountsAndResetLeft();
+    deltaR = encoders.getCountsAndResetRight();
+    encCountsLeft += deltaL;
+    encCountsRight += deltaR;
+    odometry.update_odom(encCountsLeft, encCountsRight, x, y, theta);
+    float _delta_x = abs(x - last_x);
+    float _delta_y = abs(y - last_y);
+    if (_delta_x > delta_checker || _delta_y > delta_checker){
+      motors.setSpeeds(0,0);
+      last_x = x;
+      last_y = y;
+      Distances d = checkSurroundings();
+      if(d.front < 15){
+        wall_ahead = true;
+      }
+    }
+    if (wall_ahead){
+      wall_ahead = false;
+      motors.setSpeeds(0,150);
+      delay(1000);
+      motors.setSpeeds(0,0);
+    }
+    servo.write(0);
+    wallDist = sonar.readDist();
+    PIDout = pidVel.update(wallDist,desiredDistFromWall);
+    int leftSpeed = base_speed + PIDout;
+    int rightSpeed = base_speed - PIDout;
+    motors.setSpeeds(leftSpeed, rightSpeed);
+    for (int i = 0; i < 5; i++){
+      if (lineSensorValues[i] > blueThreshold){
+        motors.setSpeeds(0, 0);
+          while(true){}
+      }
+    }
   }
 }
 
@@ -265,8 +302,12 @@ void backToBase(){
 void setup() {
   Serial.begin(9600);  // Start serial communication for debugging
   servo.attach(5);  // Attach the servo to pin 5
-  servo.write(90);  // Set the servo to the center position
+  servo.write(0);  // Set the servo to the right wall
   delay(1000);  // Wait for a second
+  // Wait until something is received
+while (Serial.available() == 0) {
+  // Do nothing, just wait
+}
   lineSensors.read(blueValues);  // Fills the array blue
   for (uint8_t i = 0; i < 5; i++) {
     Serial.print("Sensor ");
@@ -274,6 +315,9 @@ void setup() {
     Serial.print(": ");
     Serial.println(blueValues[i]);
   }
+  motors.setSpeeds(100,100);
+  delay(1000);
+  motors.setSpeeds(0,0);
 }
 
 // void loop() {
